@@ -1,0 +1,345 @@
+// Written by Daniel Shiffman and modified Kenmur "Jasper" Buriak
+// Links:
+// https://natureofcode.com/book/chapter-1-vectors/
+// https://natureofcode.com/book/chapter-4-particle-systems/
+
+float a = 15;
+float b = 21;
+float x = 100;
+float y = 100;
+float sb = 100;
+
+float sl = 10;
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+boolean bounce = false;
+boolean line = false;
+
+boolean particle = false;
+
+boolean help = false;
+
+boolean multiply = false;
+boolean normal = false;
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+ball ball;
+ball2 ball2;
+Lines lines;
+
+ArrayList<Particle> particles;
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+public void setup()
+{
+  fullScreen();
+  background(75);
+  fill(175);
+  textSize(25);
+  text("Press B to see 'Chapter One: Vectors''s code Part One (Modified)", 350, 350);
+  text("Press L to see 'Chapter One: Vectors''s code Part Two (Modified)", 350, 400);
+  text("Press P to see 'Chapter Two: Particles''s code Part One (Modified)", 340, 450);
+  
+  text("If you ever need help in this programme, press H to see options", 350, 700);
+}
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+public void draw()
+{  
+  if(bounce == true)
+  {
+    background(25);
+    ball.show();
+    ball.move();
+    ball.bounce();
+    ball2.show();
+    ball2.move();
+    ball2.bounce();
+  }
+  
+  if(line == true)
+  {
+    background(75);
+    lines.show();
+  }
+  
+  if(help == true)
+  {
+    background(75);
+    fill(200);
+    textSize(35);
+    text("Bouncing Balls:", 600, 250);
+    text("Follow the Line:", 590, 400);
+    
+    textSize(25);
+    text("The UP and DOWN arrows change the size of the balls", 400, 300);
+    text("The UP and DOWN arrows change the length of the line", 390, 450);
+    text("The LEFT and RIGHT arrows change how line acts", 420, 500);
+    
+    text("Press B to see 'Chapter One: Vectors''s code Part One (Modified)", 350, 650);
+    text("Press L to see 'Chapter One: Vectors''s code Part Two (Modified)", 350, 700);
+    text("Press P to see 'Chapter Two: Particles''s code Part One (Modified)", 340, 750);
+    
+  }
+  
+  //*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+  
+  if(particle == true)
+  {
+    background(75);
+    
+    particles.add(new Particle(new PVector(width-400, height-800)));
+    particles.add(new Particle(new PVector(width/2, height-800)));
+    particles.add(new Particle(new PVector(width/4, height-800)));
+  
+    for (int i = particles.size()-1; i >= 0; i--) 
+    {
+      Particle p = particles.get(i);
+      p.run();
+      if (p.isDead()) 
+      {
+        particles.remove(i);
+      }
+    }
+  }
+
+}
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+public void keyPressed()
+{
+  if(keyCode == 'B')
+  {
+    line = false;
+    help = false;
+    particle = false;
+    ball = new ball();
+    ball2 = new ball2();
+    bounce = true;
+  }
+  
+  if(keyCode == 'L')
+  {
+    bounce = false;
+    help = false;
+    particle = false;
+    lines = new Lines();
+    line = true;
+  }
+  
+  if(keyCode == 'H')
+  {
+    line = false;
+    bounce = false;
+    particle = false;
+    help = true;
+  }
+  
+  if(keyCode == UP && bounce == true)
+  {
+    sb += 20;
+    System.out.println("Size:  " + sb);
+  }
+  
+  if(keyCode == DOWN && bounce == true)
+  {
+    sb -= 20;
+    System.out.println("Size:  " + sb);
+    
+  }
+  if(keyCode == UP && line == true)
+  {
+    sl += 2;
+    System.out.println("Size:  " + sl);
+  }
+  
+  if(keyCode == DOWN && line == true)
+  {
+    if(sl - 2 > 0)
+    {
+    sl -= 2;
+    }
+    System.out.println("Size:  " + sl);
+  }
+  
+  if(keyCode == LEFT && line == true)
+  {
+    multiply = true;
+    normal = false;
+  }
+  
+  if(keyCode == RIGHT && line == true)
+  {
+    normal = true;
+    multiply = false;
+  }
+  
+  //if(keyCode == 'R')
+  //{
+  //  background(75);
+  //}
+  
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+  
+  if(keyCode == 'P')
+  {
+    line = false;
+    bounce = false;
+    help = false;;
+    particles = new ArrayList<Particle>();
+    particle = true;
+  }
+  
+}
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+class ball
+{
+  PVector loc = new PVector(x, y);
+  PVector vel = new PVector(a, b);
+  
+  ball()
+  {
+    loc = new PVector(width, height);
+    vel = new PVector(a, b);
+  }
+  
+  
+  public void move()
+  {
+    loc.add(vel);
+  }
+  
+  public void bounce()
+  {
+    if((loc.x > width)||(loc.x < 0))
+    {
+      vel.x = vel.x * -1;
+    }
+    if((loc.y > height)||(loc.y < 0))
+    {
+      vel.y = vel.y * -1;
+    }
+
+  }
+  
+  public void show()
+  {
+    stroke(0, 175, 200);
+    fill(0, 200, 225);
+    ellipse(loc.x, loc.y, sb, sb);
+  }
+  
+}
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+class ball2
+{
+  PVector loc = new PVector(x, y);
+  PVector vel = new PVector(a, b);
+  
+  ball2()
+  {
+    loc = new PVector(0, 0);
+    vel = new PVector(a, b);
+  }
+  
+  
+  public void move()
+  {
+    loc.add(vel);
+  }
+  
+  public void bounce()
+  {
+    if((loc.x > width)||(loc.x < 0))
+    {
+      vel.x = vel.x * -1;
+    }
+    if((loc.y > height)||(loc.y < 0))
+    {
+      vel.y = vel.y * -1;
+    }
+  }
+  
+  public void show()
+  {
+    stroke(150, 175, 0);
+    fill(200, 225, 0);
+    ellipse(loc.x, loc.y, sb, sb);
+  }
+  
+}
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+class Lines
+{
+  public void show()
+  {
+    float r = mouseX;
+    float b = mouseY;
+    float g = 255 - (r + b);
+    PVector mouse = new PVector(mouseX, mouseY);
+    PVector centre = new PVector(width/2, height/2);
+    
+    mouse.sub(centre);
+    
+    if(multiply == true)
+    {
+      mouse.mult(.5);
+    }
+    if(normal == true)
+    {
+      mouse.normalize();
+      mouse.mult(sl * 20);
+    }
+    
+    fill(r, g, b);
+    translate(width/2, height/2);
+    strokeWeight(sl);
+    line(0, 0, mouse.x, mouse.y);
+  }
+}
+
+//*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  
+
+class Particle 
+{
+  PVector position;
+  PVector velocity;
+  PVector acceleration;
+  float lifespan;
+ 
+  Particle(PVector l) 
+  {
+    acceleration = new PVector(0,0.05);
+    velocity = new PVector(random(-1,1),random(-2,0));
+    position = l.copy();
+    lifespan = 255.0;
+  }
+ 
+  public void run() 
+  {
+    update();
+    display();
+  }
+ 
+  void update() 
+  {
+    velocity.add(acceleration);
+    position.add(velocity);
+    lifespan -= 2.0;
+  }
+ 
+  void display() 
+  {
+    stroke(25, lifespan);
+    strokeWeight(2);
+    fill(25, 200, 225, lifespan);
+    ellipse(position.x, position.y, 12, 12);
+  }
+ 
+  boolean isDead() 
+  {
+    if (lifespan < 0.0) 
+    {
+      return true;
+    } 
+    else 
+    {
+      return false;
+    }
+  }
+}
